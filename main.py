@@ -134,7 +134,7 @@ class Network:
     def __init__(self, mutation_rate, hidden_weights=False, output_weights=False):
         # Player info
         self.x = 250
-        self.y = 200
+        self.y = 100
         self.vel = 0
         self.acc = 30
         self.color = random_color()
@@ -178,7 +178,6 @@ class Network:
         # Check if is alive
         for ob in obs:
             if self.rect.colliderect(ob.rectup) or self.rect.colliderect(ob.rectdn):
-                print(ob.index)
                 self.isAlive = False
         if self.y > H or self.y < 0:
             self.isAlive = False
