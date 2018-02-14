@@ -156,7 +156,7 @@ class Network:
 
     def prediction(self, target):
         # Horizontal and vertical difference between target and player
-        deltax = (target.x - 20) / W * self.SCALE_FACTOR
+        deltax = (target.x - 40) / W * self.SCALE_FACTOR
         # deltay = normalize((self.y, target.y), 800) * self.SCALE_FACTOR
         deltay = confront(self.y, target.y) * self.SCALE_FACTOR + 20
         target_height = target.x / H * self.SCALE_FACTOR
