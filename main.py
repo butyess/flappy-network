@@ -77,6 +77,7 @@ class GeneticAlgorithm:
         self.mr = 0.4
         self.nu = number_units
         self.population = [Network(self.mr) for _ in range(self.nu)]
+        self.goat = Network(self.mr)
 
     def play(self, obs):
         # First obstacle is the target
@@ -98,13 +99,21 @@ class GeneticAlgorithm:
     def evolve(self):
         winners = self.selection()
         new_population = []
-        if winners[0].fitness == 0:
+        if winners[0].fitness == 0 and self.goat.fitness == 0:
             self.population = [Network(self.mr) for _ in range(self.nu)]
         else:
             # New population
             for i in range(self.nu):
-                # First member is child of the two best
+                # First member is the greatest
                 if i == 0:
+                    child = self.goat
+                # Second member is child of goat and the best of the generation
+                if i == 1:
+                    parentA = self.goat
+                    parentB = self.population[0]
+                    child = parentA.crossover(parentB)
+                # Third member is child of the two best
+                elif i == 2:
                     parentA = self.population[0]
                     parentB = self.population[1]
                     child = parentA.crossover(parentB)
@@ -121,6 +130,11 @@ class GeneticAlgorithm:
             self.population = new_population
 
     def selection(self):
+        # Greatest Of All Time
+        for x in self.population:
+            if x.fitness > self.goat.fitness:
+                self.goat = x
+        # Top 4
         self.population.sort(key=lambda x: x.fitness, reverse=True)
         for i in range(4):
             self.population[i].isWinner = True
