@@ -1,6 +1,7 @@
 # todo: fix lag
 
 import sys
+import os
 import random
 import pygame
 import pygame.freetype
@@ -14,6 +15,10 @@ import numpy as np
 
 pygame.init()
 pygame.freetype.init()
+
+font = pygame.freetype.SysFont("Source Code Pro For Powerline", 20)
+if os.name == 'nt':
+    font = pygame.freetype.SysFont("Source Code Pro", 20)
 
 WHITE = (255, 255, 255)
 RED = (255, 10, 10)
@@ -52,7 +57,7 @@ def random_color():
 
 
 class Obstacle:
-    path = [random.randint(50, H - 150) for _ in range(60)]
+    path = [random.randint(50, H - 150)]
     ob = 0
     def __init__(self):
         self.x = W
@@ -252,20 +257,19 @@ def main():
     while True:
         obs_count += 1
         count += 1
+
+        font.render_to(DS, (10, 10), str(Obstacle.ob -1), fgcolor=WHITE)
+
         if obs_count >= 50:
             obs_count = 0
-            obs.append(Obstacle())
-
-        if len(Obstacle.path) - 1 <= Obstacle.ob:
             Obstacle.path.append(random.randint(50, H - 150))
+            obs.append(Obstacle())
 
         for ob in obs:
             if ob.alive:
                 ob.draw()
 
         genetic.play(obs)
-
-        # print(len([0 for x in genetic.population if x.isAlive]))
 
         if not genetic.status():
             count = 0
