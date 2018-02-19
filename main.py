@@ -74,7 +74,7 @@ class Obstacle:
 
 class GeneticAlgorithm:
     def __init__(self, number_units):
-        self.mr = 0.2
+        self.mr = 0.4
         self.nu = number_units
         self.population = [Network(self.mr) for _ in range(self.nu)]
 
@@ -99,29 +99,26 @@ class GeneticAlgorithm:
         winners = self.selection()
         new_population = []
         if winners[0].fitness == 0:
-            for pl in self.population:
-                pl.mr = 0.8
+            self.population = [Network(self.mr) for _ in range(self.nu)]
         else:
-            for pl in self.population:
-                pl.mr = 0.4
-        # New population
-        for i in range(self.nu):
-            # First member is child of the two best
-            if i == 0:
-                parentA = self.population[0]
-                parentB = self.population[1]
-                child = parentA.crossover(parentB)
-            # Other members are children of random winners
-            elif i < self.nu - 2:
-                parentA = random.choice(winners)
-                parentB = random.choice(winners)
-                child = parentA.crossover(parentB)
-            # Last 2 members are children of random previous member
-            else:
-                child = random.choice(self.population)
-            child.mutate()
-            new_population.append(child)
-        self.population = new_population
+            # New population
+            for i in range(self.nu):
+                # First member is child of the two best
+                if i == 0:
+                    parentA = self.population[0]
+                    parentB = self.population[1]
+                    child = parentA.crossover(parentB)
+                # Other members are children of random winners
+                elif i < self.nu - 2:
+                    parentA = random.choice(winners)
+                    parentB = random.choice(winners)
+                    child = parentA.crossover(parentB)
+                # Last 2 members are children of random previous member
+                else:
+                    child = random.choice(self.population)
+                child.mutate()
+                new_population.append(child)
+            self.population = new_population
 
     def selection(self):
         self.population.sort(key=lambda x: x.fitness, reverse=True)
@@ -244,6 +241,9 @@ def main():
         if obs_count >= 50:
             obs_count = 0
             obs.append(Obstacle())
+
+        if len(Obstacle.path) - 1 <= Obstacle.ob:
+            Obstacle.path.append(random.randint(50, H - 150))
 
         for ob in obs:
             if ob.alive:
