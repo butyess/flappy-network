@@ -62,7 +62,7 @@ class Obstacle:
     def __init__(self):
         self.x = W
         self.up = Obstacle.path[Obstacle.ob]
-        self.y = self.up + 60
+        self.y = self.up + 50
         self.alive = True
         self.index = Obstacle.ob
         Obstacle.ob += 1
@@ -73,7 +73,7 @@ class Obstacle:
         # upper obstacle
         self.rectup = pygame.draw.rect(DS, RED, (self.x, 0, 20, self.up))
         # lower obstacle
-        self.rectdn = pygame.draw.rect(DS, RED, (self.x, self.up + 120, 20, H - (self.up + 120) ))
+        self.rectdn = pygame.draw.rect(DS, RED, (self.x, self.up + 100, 20, H - (self.up + 100) ))
         self.x -= 5
 
 
