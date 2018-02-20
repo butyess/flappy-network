@@ -275,7 +275,7 @@ def main():
             count = 0
             obs_count = 0
             Obstacle.ob = 0
-            Obstacle.path = [random.randint(50, H - 150) for _ in range(60)]
+            Obstacle.path = [random.randint(50, H - 150)]
             obs = [Obstacle()]
             genetic.evolve()
 
