@@ -93,7 +93,7 @@ class GeneticAlgorithm:
             if player.isAlive:
                 player.calc_fitness(obs[0])
                 player.draw(obs)
-                player.prediction(target)
+                player.prediction(obs)
 
     def status(self):
         if any(x.isAlive for x in self.population):
@@ -104,7 +104,7 @@ class GeneticAlgorithm:
     def evolve(self):
         winners = self.selection()
         new_population = []
-        if winners[0].fitness == 0 and self.goat.fitness == 0:
+        if winners[0].fitness == 0 and self.goat.fitness < 50:
             self.population = [Network(self.mr) for _ in range(self.nu)]
         else:
             # New population
@@ -170,9 +170,17 @@ class Network:
             self.model.layers[0].set_weights(hidden_weights)
             self.model.layers[1].set_weights(output_weights)
 
-    def prediction(self, target):
+    def prediction(self, obs):
+        # Find the target
+        targets = []
+        for ob in obs:
+            if ob.alive and ob.x + 20 > self.x:
+                targets.append(ob)
+        targets.sort(key=lambda x: x.x)
+        target = targets[0]
         # Horizontal and vertical difference between target and player
-        deltax = (target.x - 40) / W * self.SCALE_FACTOR
+        pygame.draw.circle(DS, WHITE, (target.x + 25, target.y), 3)
+        deltax = (target.x + 25) / W * self.SCALE_FACTOR
         # deltay = normalize((self.y, target.y), 800) * self.SCALE_FACTOR
         deltay = confront(self.y, target.y) * self.SCALE_FACTOR + 20
         target_height = target.x / H * self.SCALE_FACTOR
@@ -260,7 +268,7 @@ def main():
 
         font.render_to(DS, (10, 10), str(Obstacle.ob -1), fgcolor=WHITE)
 
-        if obs_count >= 50:
+        if obs_count >= 30:
             obs_count = 0
             Obstacle.path.append(random.randint(50, H - 150))
             obs.append(Obstacle())
