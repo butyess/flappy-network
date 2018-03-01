@@ -83,12 +83,9 @@ class GeneticAlgorithm:
         self.nu = number_units
         self.population = [Network(self.mr) for _ in range(self.nu)]
         self.goat = Network(self.mr)
+        self.generation = 1
 
     def play(self, obs):
-        # First obstacle is the target
-        for ob in obs:
-            if ob.alive and ob.x > 99:
-                target = ob
         for player in self.population:
             if player.isAlive:
                 player.calc_fitness(obs[0])
@@ -133,6 +130,7 @@ class GeneticAlgorithm:
                 child.mutate()
                 new_population.append(child)
             self.population = new_population
+        self.generation += 1
 
     def selection(self):
         # Greatest Of All Time
@@ -171,15 +169,16 @@ class Network:
             self.model.layers[1].set_weights(output_weights)
 
     def prediction(self, obs):
-        # Find the target
+        # The target is the first element of a list with all the possible targets
         targets = []
         for ob in obs:
             if ob.alive and ob.x + 20 > self.x:
                 targets.append(ob)
         targets.sort(key=lambda x: x.x)
         target = targets[0]
-        # Horizontal and vertical difference between target and player
+        # Draw the target
         pygame.draw.circle(DS, WHITE, (target.x + 25, target.y), 3)
+        # Horizontal and vertical difference between target and player
         deltax = (target.x + 25) / W * self.SCALE_FACTOR
         # deltay = normalize((self.y, target.y), 800) * self.SCALE_FACTOR
         deltay = confront(self.y, target.y) * self.SCALE_FACTOR + 20
@@ -266,8 +265,6 @@ def main():
         obs_count += 1
         count += 1
 
-        font.render_to(DS, (10, 10), str(Obstacle.ob -1), fgcolor=WHITE)
-
         if obs_count >= 30:
             obs_count = 0
             Obstacle.path.append(random.randint(50, H - 150))
@@ -276,6 +273,9 @@ def main():
         for ob in obs:
             if ob.alive:
                 ob.draw()
+
+        font.render_to(DS, (10, 10), str(Obstacle.ob -1), fgcolor=WHITE)
+        font.render_to(DS, (W - 20, 10), str(genetic.generation), fgcolor=YELLOW)
 
         genetic.play(obs)
 
