@@ -1,3 +1,3 @@
-# Flappy Network
+# Flappy bird with neural networks
 
-Require keras and pygame, to play run ``` python main.py ```
+Requires numpy, pygame and ```python => 3.5```
