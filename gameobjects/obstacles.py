@@ -5,20 +5,21 @@ from pygame import Vector2
 
 
 class ObstacleList:
-    """Class that manages the obstacles."""
-    def __init__(self, screen_width, screen_height,
-            ob_width=30, ob_vspace=150, ob_hspace=200, ob_speed=-200, middle=None):
-        """Initialize the class
+    """Class that manages obstacles."""
 
-        Parameters
-        ----------
-        screen_width : needed for obstacle objects
-        screen_height : needed for obstacle objects
-        ob_width : width of obstacles
-        ob_vspace : space in the middle of the obstacle
-        ob_hspace : space in between two consecutive obstacles
-        ob_speed : speed to move the obstacles
-        middle : the middle of the obstacles, leave default for random.
+    def __init__(self, screen_width: int, screen_height: int,
+                 ob_width: int = 30, ob_vspace: int = 150,
+                 ob_hspace: int = 200, ob_speed: int = -200,
+                 middle=None):
+        """Initialize the class.
+
+        :param screen_width: needed for obstacle objects.
+        :param screen_height: needed for obstacle objects.
+        :param ob_width: width of obstacles.
+        :param ob_vspace: space in the middle of the obstacle.
+        :param ob_hspace: space in between two consecutive obstacles.
+        :param ob_speed: speed to move the obstacles.
+        :param middle: the middle of the obstacles, leave default for random.
         """
         self.obstacles = []
         self.screen_width = screen_width
@@ -31,7 +32,7 @@ class ObstacleList:
         self.add()
 
     def add(self):
-        """Adds an obstacle at the right of the screen."""
+        """Adds an obstacle at the right."""
         if not self.middle:
             middle = randint(self.screen_height // 10,
                              self.screen_height - self.screen_height // 10)
@@ -44,23 +45,21 @@ class ObstacleList:
                                        self.ob_vspace))
 
     def pop(self):
-        """Deletes the obstacle at the leftmost of the screen."""
+        """Deletes the leftmost obstacle."""
         self.obstacles.pop(0)
 
     def right(self):
-        """Returns the right edge value for the rightmost obstacle in the screen."""
+        """Returns the right edge value for the rightmost obstacle."""
         return self.obstacles[-1].up_rect.right
 
     def left(self):
-        """Returns the right edge value for the leftmost obstacle in the screen."""
+        """Returns the right edge value for the leftmost obstacle."""
         return self.obstacles[0].up_rect.right
 
-    def next_obstacle(self, bird_x):
-        """Returns the center of the next obstacle the bird will fly into.
+    def next_obstacle(self, bird_x: int):
+        """Returns the center of the next obstacle the bird given will fly into.
 
-        Parameters
-        ----------
-        bird_x : the x coordination of the birds
+        :param bird_x: the x coordination of the bird
         """
         for ob in self.obstacles:
             if ob.up_rect.centerx > bird_x:
@@ -78,19 +77,19 @@ class ObstacleList:
 
 
 class Obstacle:
-    """Represents an obstacle: an obstacle is made of a top pygame.Rect
-    and a bottom pygame.Rect; those are defined as self.up_rect and self.down_rect.
+    """Represents an obstacle: an obstacle is made of a top pygame.Rect and a bottom pygame.Rect;
+    those are defined as self.up_rect and self.down_rect.
     """
-    def __init__(self, width, screen_width, screen_height, middle, vspace=50):
-        """Instanciate an obstacle at the right of the screen
 
-        Parameters
-        ----------
-        width : the width of the obstacle, in pixels
-        screen_width : needed to put the obstacle at the right of the screen.
-        screen_height : needed to calculate the rect of the object.
-        middle : the middle of the obstacle, where the birds should fly into.
-        vspace : vertical spacing in the middle of the obstacle.
+    def __init__(self, width: int, screen_width: int, screen_height: int,
+                 middle: int, vspace: int = 50):
+        """Instantiate an obstacle at the right of the screen
+
+        :param width: the width of the obstacle, in pixels.
+        :param screen_width: needed to put the obstacle at the right of the screen.
+        :param screen_height: needed to calculate the rect of the object.
+        :param middle: the middle of the obstacle, where the birds should fly into.
+        :param vspace: vertical spacing in the middle of the obstacle.
         """
         self.middle = middle
         self.up_rect = pygame.Rect(screen_width,
@@ -102,8 +101,11 @@ class Obstacle:
                                      width,
                                      screen_height - (self.middle + vspace // 2))
 
-    def update(self, dt, speed):
-        """Move the obstacle, based on its speed."""
+    def update(self, dt: int, speed: Vector2):
+        """Move the obstacle, based on its speed.
+
+        :param dt: delta time
+        :param speed: speed vector
+        """
         self.up_rect.move_ip(speed * dt, 0)
         self.down_rect.move_ip(speed * dt, 0)
-
