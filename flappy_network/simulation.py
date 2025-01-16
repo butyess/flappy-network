@@ -1,9 +1,9 @@
 import pygame
 import numpy as np
+import argparse
 
-from gameobjects.game import Game, WHITE, GREEN
-from gameobjects.obstacles import ObstacleList
-from genetics.population import Population
+from .gameobjects import ObstacleList, Game, WHITE, GREEN
+from .genetics import Population
 
 
 class Simulation:
@@ -76,19 +76,23 @@ class Simulation:
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('population_size', type=int, default=10, help='Population size')
+    parser.add_argument('mutuation_rate', type=float, default=0.4, help='Mutuation rate')
+    args = parser.parse_args()
+
     game = Game(width=800, height=450)
-    population = Population(size=10, layers=(2, 6, 1), mutation_rate=0.4)
-    while not game.exit:
-        obstacles = ObstacleList(screen_width=game.screen.get_width(),
-                                 screen_height=game.screen.get_height(),
-                                 ob_width=30, ob_vspace=100, ob_hspace=200, ob_speed=-300)
-        sim = Simulation(obstacles, population)
-        game.run(sim)
-        population.evolve()
-    game.quit()
+    population = Population(size=args.population_size,
+                            layers=(2, 6, 1),
+                            mutation_rate=args.mutuation_rate)
 
-
-if __name__ == '__main__':
-    main()
-
-
+    try:
+        while not game.exit:
+            obstacles = ObstacleList(screen_width=game.screen.get_width(),
+                                     screen_height=game.screen.get_height(),
+                                     ob_width=10, ob_vspace=100, ob_hspace=400, ob_speed=-300)
+            sim = Simulation(obstacles, population)
+            game.run(sim)
+            population.evolve()
+    finally:
+        game.quit()

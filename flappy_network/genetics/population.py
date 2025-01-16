@@ -5,8 +5,8 @@ import random
 import numpy as np
 from pygame import Vector2
 
-from gameobjects.bird import Bird
-from genetics.neural_network import NeuralNetwork
+from ..gameobjects.bird import Bird
+from .neural_network import NeuralNetwork
 
 
 class Population:

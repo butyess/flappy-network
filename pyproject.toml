@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flappy-network"
+version = "0.0.1"
+dependencies = [
+    "numpy",
+    "pygame",
+]
+
+[project.scripts]
+flappy-network = "flappy_network.simulation:main"
