@@ -1,6 +1,7 @@
+import argparse
+
 import pygame
 import numpy as np
-import argparse
 
 from .gameobjects import ObstacleList, Game, WHITE, GREEN
 from .genetics import Population
@@ -85,6 +86,7 @@ def main():
     population = Population(size=args.population_size,
                             layers=(2, 6, 1),
                             mutation_rate=args.mutuation_rate)
+
 
     try:
         while not game.exit:
